@@ -1,0 +1,262 @@
+CREATE DATABASE GreenTrack;
+USE GreenTrack;
+GO
+
+--Create Tables
+--Users Table
+IF OBJECT_ID('Users', 'U') IS NOT NULL DROP TABLE Users;
+GO
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY IDENTITY(1,1),
+    FullName VARCHAR(100),
+    UserRole VARCHAR(50),
+    Email VARCHAR(100),
+    ContactNo VARCHAR(15)
+);
+GO
+
+-- Locations Table
+IF OBJECT_ID('Locations', 'U') IS NOT NULL DROP TABLE Locations;
+GO
+CREATE TABLE Locations (
+    LocationID INT PRIMARY KEY IDENTITY(1,1),
+    LocationName VARCHAR(100),
+    City VARCHAR(100),
+    AreaType VARCHAR(50),
+    Coordinates VARCHAR(100)
+);
+GO
+
+-- Sensors Table
+IF OBJECT_ID('Sensors', 'U') IS NOT NULL DROP TABLE Sensors;
+GO
+CREATE TABLE Sensors (
+    SensorID INT PRIMARY KEY IDENTITY(1,1),
+    SensorType VARCHAR(100),
+    InstallationDate DATE,
+    Status VARCHAR(50),
+    LocationID INT FOREIGN KEY REFERENCES Locations(LocationID)
+);
+GO
+
+-- EnvironmentalData Table
+IF OBJECT_ID('EnvironmentalData', 'U') IS NOT NULL DROP TABLE EnvironmentalData;
+GO
+CREATE TABLE EnvironmentalData (
+    DataID INT PRIMARY KEY IDENTITY(1,1),
+    SensorID INT FOREIGN KEY REFERENCES Sensors(SensorID),
+    RecordedDate DATETIME,
+    Temperature DECIMAL(5,2),
+    AirQualityIndex INT,
+    WaterPollutionLevel DECIMAL(5,2),
+    WasteLevel DECIMAL(5,2)
+);
+GO
+
+-- EnvironmentalEvents Table
+IF OBJECT_ID('EnvironmentalEvents', 'U') IS NOT NULL DROP TABLE EnvironmentalEvents;
+GO
+CREATE TABLE EnvironmentalEvents (
+    EventID INT PRIMARY KEY IDENTITY(1,1),
+    EventType VARCHAR(100),
+    EventDate DATETIME,
+    Severity VARCHAR(50),
+    Description VARCHAR(255),
+    LocationID INT FOREIGN KEY REFERENCES Locations(LocationID)
+);
+GO
+
+-- Actions Table
+IF OBJECT_ID('Actions', 'U') IS NOT NULL DROP TABLE Actions;
+GO
+CREATE TABLE Actions (
+    ActionID INT PRIMARY KEY IDENTITY(1,1),
+    EventID INT FOREIGN KEY REFERENCES EnvironmentalEvents(EventID),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID),
+    ActionDate DATETIME,
+    ActionDescription VARCHAR(255)
+);
+GO
+
+--Insert Data
+-- Users
+INSERT INTO Users (FullName, UserRole, Email, ContactNo) VALUES
+('Nimal Perera', 'Citizen', 'nimal@gmail.com', '0771234567'),
+('Sunil Fernando', 'Citizen', 'sunil@gmail.com', '0772234567'),
+('Ravi Silva', 'Public Servant', 'ravi@env.gov.lk', '0713234567'),
+('Anoma Jayasuriya', 'Citizen', 'anoma@gmail.com', '0774234567'),
+('Kamal Wickramasinghe', 'Public Servant', 'kamal@env.gov.lk', '0715234567'),
+('Dilani Perera', 'Environmental Group', 'dilani@green.lk', '0776234567'),
+('Ruwan Kumara', 'Citizen', 'ruwan@gmail.com', '0777234567'),
+('Sajith Herath', 'Environmental Group', 'sajith@ecowatch.lk', '0778234567'),
+('Heshani Dias', 'Citizen', 'heshani@gmail.com', '0779234567'),
+('Indika Weerasinghe', 'Public Servant', 'indika@env.gov.lk', '0710234567'),
+('Madu Dissanayake', 'Citizen', 'madu@gmail.com', '0771334567'),
+('Janaka Gunasekara', 'Environmental Group', 'janaka@greenforce.lk', '0772334567'),
+('Rashmi De Silva', 'Citizen', 'rashmi@gmail.com', '0773334567'),
+('Tharindu Abeysekara', 'Public Servant', 'tharindu@env.gov.lk', '0714334567'),
+('Kasun Ranasinghe', 'Citizen', 'kasun@gmail.com', '0775334567');
+GO
+
+-- Locations
+INSERT INTO Locations (LocationName, City, AreaType, Coordinates) VALUES
+('Central Park', 'Colombo', 'Urban', '6.9271N, 79.8612E'),
+('Kandy Lake', 'Kandy', 'Urban', '7.2906N, 80.6337E'),
+('Galle Fort', 'Galle', 'Coastal', '6.0329N, 80.2168E'),
+('Matara Beach', 'Matara', 'Coastal', '5.9549N, 80.5550E'),
+('Kurunegala Lake', 'Kurunegala', 'Urban', '7.4863N, 80.3623E'),
+('Anuradhapura Park', 'Anuradhapura', 'Urban', '8.3114N, 80.4037E'),
+('Negombo Lagoon', 'Negombo', 'Coastal', '7.2083N, 79.8358E'),
+('Nuwara Eliya Gardens', 'Nuwara Eliya', 'Hill', '6.9497N, 80.7891E'),
+('Trincomalee Port', 'Trincomalee', 'Industrial', '8.5711N, 81.2335E'),
+('Jaffna Town', 'Jaffna', 'Urban', '9.6615N, 80.0255E'),
+('Ratnapura Mine', 'Ratnapura', 'Industrial', '6.6828N, 80.3995E'),
+('Hambantota Harbour', 'Hambantota', 'Industrial', '6.1240N, 81.1185E'),
+('Badulla Town', 'Badulla', 'Urban', '6.9934N, 81.0550E'),
+('Polonnaruwa Lake', 'Polonnaruwa', 'Rural', '7.9403N, 81.0188E'),
+('Batticaloa Lagoon', 'Batticaloa', 'Coastal', '7.7102N, 81.6925E');
+GO
+
+-- Sensors
+INSERT INTO Sensors (SensorType, InstallationDate, Status, LocationID) VALUES
+('Air Quality', '2023-01-05', 'Active', 1),
+('Water Quality', '2023-02-10', 'Active', 2),
+('Waste Sensor', '2023-03-12', 'Inactive', 3),
+('Air Quality', '2023-04-08', 'Active', 4),
+('Water Quality', '2023-05-01', 'Active', 5),
+('Temperature', '2023-06-10', 'Active', 6),
+('Waste Sensor', '2023-07-15', 'Active', 7),
+('Air Quality', '2023-08-20', 'Inactive', 8),
+('Water Quality', '2023-09-10', 'Active', 9),
+('Temperature', '2023-09-22', 'Active', 10),
+('Waste Sensor', '2023-10-03', 'Active', 11),
+('Air Quality', '2023-10-10', 'Active', 12),
+('Water Quality', '2023-10-15', 'Active', 13),
+('Temperature', '2023-10-20', 'Inactive', 14),
+('Air Quality', '2023-10-25', 'Active', 15);
+GO
+
+-- EnvironmentalData 
+INSERT INTO EnvironmentalData (SensorID, RecordedDate, Temperature, AirQualityIndex, WaterPollutionLevel, WasteLevel) VALUES
+(1,'2025-01-01',30.5,85,0,20),
+(2,'2025-01-02',28.0,0,70,0),
+(3,'2025-01-03',29.0,0,0,80),
+(4,'2025-01-04',31.0,65,0,10),
+(5,'2025-01-05',27.5,0,75,0),
+(6,'2025-01-06',32.0,0,0,5),
+(7,'2025-01-07',28.5,0,0,90),
+(8,'2025-01-08',30.0,60,0,0),
+(9,'2025-01-09',29.5,0,80,0),
+(10,'2025-01-10',35.0,0,0,0),
+(11,'2025-01-11',28.0,0,0,85),
+(12,'2025-01-12',30.0,70,0,0),
+(13,'2025-01-13',29.0,0,60,0),
+(14,'2025-01-14',36.0,0,0,0),
+(15,'2025-01-15',33.0,90,0,0);
+GO
+
+-- EnvironmentalEvents 
+INSERT INTO EnvironmentalEvents (EventType, EventDate, Severity, Description, LocationID) VALUES
+('Pollution Spike','2025-01-01','High','Air quality worsened due to industrial smoke',1),
+('Water Contamination','2025-01-02','Medium','Water pollution detected in lake',2),
+('Waste Overflow','2025-01-03','High','Garbage overflow in streets',3),
+('Pollution Spike','2025-01-04','Low','Temporary air quality drop',4),
+('Water Contamination','2025-01-05','High','Water contamination near factory',5),
+('Temperature Alert','2025-01-06','Medium','Unusual temperature rise',6),
+('Waste Overflow','2025-01-07','High','Waste bins full',7),
+('Pollution Spike','2025-01-08','Low','Minor air pollution',8),
+('Water Contamination','2025-01-09','High','Water pollution detected',9),
+('Temperature Alert','2025-01-10','Medium','Heatwave recorded',10),
+('Waste Overflow','2025-01-11','High','Overflow at waste site',11),
+('Pollution Spike','2025-01-12','Medium','Air quality alert',12),
+('Water Contamination','2025-01-13','Low','Water pollution minor',13),
+('Temperature Alert','2025-01-14','High','Record temperature',14),
+('Pollution Spike','2025-01-15','High','Air quality critical',15);
+GO
+
+-- Actions 
+INSERT INTO Actions (EventID, UserID, ActionDate, ActionDescription) VALUES
+(1,3,'2025-01-01','Dispatched cleanup team'),
+(2,5,'2025-01-02','Sent water sample for testing'),
+(3,1,'2025-01-03','Citizen reported to municipal office'),
+(4,7,'2025-01-04','Temporary closure of park area'),
+(5,5,'2025-01-05','Environmental department notified'),
+(6,10,'2025-01-06','Monitored temperature readings'),
+(7,8,'2025-01-07','Waste cleared by sanitation team'),
+(8,12,'2025-01-08','Air quality monitored'),
+(9,5,'2025-01-09','Water treatment applied'),
+(10,10,'2025-01-10','Heatwave warning issued'),
+(11,1,'2025-01-11','Municipal cleanup carried out'),
+(12,3,'2025-01-12','Air quality sensors recalibrated'),
+(13,5,'2025-01-13','Water monitoring initiated'),
+(14,10,'2025-01-14','Temperature alert broadcasted'),
+(15,3,'2025-01-15','Air quality mitigation team deployed');
+GO
+
+--Show Tables
+--Users Table
+SELECT * FROM Users;
+
+SELECT * FROM Locations;
+
+SELECT * FROM Sensors;
+
+SELECT * FROM EnvironmentalData;
+
+SELECT * FROM EnvironmentalEvents;
+
+SELECT * FROM Actions;
+
+
+SELECT * FROM Sensors;
+
+SELECT * FROM EnvironmentalData
+WHERE SensorID = 3;
+
+SELECT * FROM EnvironmentalEvents
+WHERE LocationID = 2;
+
+SELECT
+     L.LocationName,
+	 AVG(ED.AirQualityIndex) AS AvgAirQualityIndex,
+	 AVG(ED.WaterPollutionLevel) AS AvgWaterPollutionLevel,
+	 AVG(ED.WasteLevel) AS AvgWasteLevel
+FROM Locations L
+JOIN Sensors S ON L.LocationID = S.LocationID
+JOIN EnvironmentalData ED ON S.SensorID = ED.SensorID
+GROUP BY L.LocationName
+ORDER BY L.LocationName;
+
+SELECT
+    L.LocationName,
+	COUNT(E.EventID) AS TotalEvents
+FROM Locations L
+JOIN EnvironmentalEvents E ON L.LocationID = E.LocationID
+WHERE E.EventDate >= DATEADD(DAY, -30, GETDATE())
+   AND E.EventType IN ('Pollution Spike', 'Hazardous Material Leak')
+GROUP BY L.LocationName
+HAVING COUNT (E.EventID) > 5;
+
+
+SELECT * FROM Users WHERE FullName = 'Malindu';
+
+INSERT INTO Users (FullName, UserRole, Email, ContactNo) 
+VALUES ('Malindu Kirabage', 'Citizen', 'malindu@gmail.com', '0704239321');
+
+SELECT * FROM Users WHERE FullName = 'Malindu Kirabage';
+
+INSERT INTO Locations (LocationName, City, AreaType, Coordinates) 
+VALUES ('Matara Beach', 'Matara', 'Coastal', '5.9549N, 80.5550E');
+
+SELECT * FROM Sensors;
+
+SELECT * FROM EnvironmentalData WHERE SensorID = 3;
+
+SELECT * FROM EnvironmentalEvents WHERE LocationID = 2;
+
+SELECT * FROM EnvironmentalData WHERE SensorID = 999;
+
+
+
+
+
